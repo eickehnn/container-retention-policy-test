@@ -41,7 +41,7 @@ jobs:
         with:
           image-names: ${{ github.repository }}/alpine-test
           cut-off: now UTC+1
-          account-type: org
+          account-type: personal
           org-name: eickehnn
           keep-at-least: 2
           skip-tags: latest

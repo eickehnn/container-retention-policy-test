@@ -1,0 +1,48 @@
+name: build-image
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - 'dockerfile'
+jobs:
+  build-image:
+    name: Build Image 
+    runs-on: ubuntu-latest
+    outputs:
+      BUILD_VERSION: ${{ steps.get-version.outputs.BUILD_VERSION }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get the version
+      id: get-version
+      run: |
+        BUILD_VERSION=$(sed -n 1p dockerfile | sed 's/FROM alpine://g')
+        echo "::set-output name=BUILD_VERSION::$BUILD_VERSION"
+    - uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}     
+    - name: Create Docker Image
+      run: |
+        IMAGE_NAME="ghcr.io/${{ github.repository }}/alpine-test"
+        IMAGE_TAG="${{ steps.get-version.outputs.BUILD_VERSION }}"
+        echo "Build Image '$IMAGE_NAME:$IMAGE_TAG'"
+        docker build -f ./dockerfile . -t "$IMAGE_NAME:$IMAGE_TAG" -t "$IMAGE_NAME:latest"
+        docker push "$IMAGE_NAME" --all-tags
+  delete-older-images:
+    name: Delete older ghcr images
+    runs-on: ubuntu-latest
+    needs: build-image
+    steps:
+      - name: Delete images
+        uses: snok/container-retention-policy@v1
+        with:
+          image-names: ${{ github.repository }}/alpine-test
+          cut-off: now UTC+1
+          account-type: org
+          org-name: eickehnn
+          keep-at-least: 2
+          skip-tags: latest
+          token: ${{ secrets.RM_IMAGE_TOKEN }}

@@ -37,7 +37,7 @@ jobs:
     needs: build-image
     steps:
       - name: Delete images
-        uses: snok/container-retention-policy@main
+        uses: snok/container-retention-policy@c407bee2dc4d6d52194c742e9e8e2f8adee0fd01
         with:
           image-names: ${{ github.repository }}/alpine-test
           cut-off: now UTC+1

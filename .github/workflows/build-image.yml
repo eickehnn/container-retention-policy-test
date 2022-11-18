@@ -18,7 +18,7 @@ jobs:
       id: get-version
       run: |
         BUILD_VERSION=$(sed -n 1p dockerfile | sed 's/FROM alpine://g')
-        echo "::set-output name=BUILD_VERSION::$BUILD_VERSION"
+        echo "BUILD_VERSION=$BUILD_VERSION" >> $GITHUB_OUTPUT
     - uses: docker/login-action@v2
       with:
         registry: ghcr.io

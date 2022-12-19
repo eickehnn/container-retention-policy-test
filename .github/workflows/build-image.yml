@@ -39,7 +39,7 @@ jobs:
       - name: Delete images
         uses: snok/container-retention-policy@v1.5.1
         with:
-          image-names: eickehnn/container-retention-policy-test/alpine-test
+          image-names: container-retention-policy-test\/alpine-test
           cut-off: now UTC+1
           account-type: personal
           org-name: eickehnn

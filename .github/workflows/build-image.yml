@@ -26,7 +26,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}     
     - name: Create Docker Image
       run: |
-        IMAGE_NAME="ghcr.io/${{ github.repository }}/alpine-test"
+        IMAGE_NAME="ghcr.io/eickehnn/container-retention-policy-test/alpine-test"
         IMAGE_TAG="${{ steps.get-version.outputs.BUILD_VERSION }}"
         echo "Build Image '$IMAGE_NAME:$IMAGE_TAG'"
         docker build -f ./dockerfile . -t "$IMAGE_NAME:$IMAGE_TAG" -t "$IMAGE_NAME:latest"

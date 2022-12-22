@@ -37,7 +37,7 @@ jobs:
     needs: build-image
     steps:
       - name: Delete images
-        uses: eickehnn/container-retention-policy@v1
+        uses: snok/container-retention-policy@v1
         with:
           image-names: container-retention-policy-test/alpine-test
           cut-off: now UTC+1
